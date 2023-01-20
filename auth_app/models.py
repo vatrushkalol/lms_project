@@ -20,3 +20,4 @@ class User(AbstractUser):
     def __str__(self):
         return f'Участник {self.first_name} {self.last_name}: {self.email}`'
 # Create your models here.
+
