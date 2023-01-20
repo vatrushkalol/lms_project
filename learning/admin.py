@@ -6,7 +6,7 @@ from .models import Course, Lesson
 class CourseAdmin(admin.ModelAdmin):
     list_display = ('title', 'author', 'start_date', 'duration')
     search_fields = ('title',)
-    list_per_page = 3
+    list_per_page = 2
     actions_on_top = True
     actions_on_bottom = True
     actions_selection_counter = True
@@ -15,7 +15,7 @@ class CourseAdmin(admin.ModelAdmin):
 class LessonAdmin(admin.ModelAdmin):
     list_display = ('course', 'name', 'preview')
     search_fields = ('name',)
-    list_per_page = 3
+    list_per_page = 2
     actions_on_top = True
     actions_on_bottom = True
     actions_selection_counter = True
