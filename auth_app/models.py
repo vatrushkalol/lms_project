@@ -21,3 +21,4 @@ class User(AbstractUser):
         return f'Участник {self.first_name} {self.last_name}: {self.email}`'
 # Create your models here.
 
+
