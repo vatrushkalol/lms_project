@@ -1,0 +1,16 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block 'content' %}
+    <div class="courses_container">
+        {% for course in courses %}
+            <div class="course_preview">
+                <p><a href="{% url 'detail' course.pk %}">{{ course.title }}</a></p>
+                <p>{{ course.start_date }}</p>
+                <p>{{ course.description }}</p>
+                <p>{{ course.price }} P. </p>
+                <p>{{ course.author }}</p>
+                <p>{{ course.duration}} </p>
+            </div>
+        {% endfor %}
+    </div>
+{% endblock %}
