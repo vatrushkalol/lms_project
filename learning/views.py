@@ -1,21 +1,49 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.http import HttpResponse
+from datetime import datetime
+from .models import Course, Lesson, Tracking
+
+
 # Create your views here.
 
 def index(request):
-    return HttpResponse('<div><h1><b>Главная страница с курсами</b></h1></div>')
+    courses = Course.objects.all()
+    current_year = datetime.now().year
+    return render(request, context={'courses': courses, 'current_year': current_year}, template_name='index.html')
+
 
 def create(request):
-    return HttpResponse('<div><h1><b>Здесь находится страница для создания курса</b></h1></div>')
+    if request.method == 'POST':
+        data = request.POST
+        Course.objects.create(title=data['title'], author=request.user, description=data['description'],
+                              start_date=data['start_date'], duration=data['duration'],
+                              count_lessons=data['count_lessons'], price=data['price'])
+        return redirect('index')
+    else:
+        return render(request, 'create.html')
 
 def delete(request, course_id):
-    return HttpResponse(f'<div><h1><b>Здесь находится страница удаление {course_id} курса</b></h1></div>')
-
-def detail(request, title):
-    return HttpResponse(f'<div><h1><b>Здесь находится страница описания {title} курса</b></h1></div>')
-
-def enroll(request, title):
-    return HttpResponse(f'<div><h1><b>Здесь находится страница записи на курс {title}</b></h1></div>')
+    Course.objects.get(id=course_id).delete()
+    return redirect('index')
 
 
+def detail(request, course_id):
+    course = Course.objects.get(id=course_id)
+    lessons = Lesson.objects.filter(id=course_id)
+    context = {'course': course, 'lessons': lessons}
+    return render(request, 'detail.html', context)
+
+
+def enroll(request, course_id):
+    if request.user.is_anonymous:
+        return redirect('login')
+    else:
+        is_existed = Tracking.objects.filter(user=request.user).exists()
+        if is_existed:
+            return HttpResponse(f'Вы уже записаны на этот курс')
+        else:
+            lessons = Lesson.objects.filter(course=course_id)
+            records = [Tracking(lesson=lesson, user=request.user, passed=False) for lesson in lessons]
+            Tracking.objects.bulk_create(records)
+            return HttpResponse('Вы записаны на данный курс')
 
