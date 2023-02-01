@@ -5,10 +5,10 @@ from django.conf import settings
 class Course(models.Model):
     title = models.CharField(verbose_name='Название курса', max_length=30, unique=True)
     author = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.PROTECT, verbose_name='Автор курса')
-    description = models.TextField(verbose_name='Описание курса', max_length=200)
+    description = models.TextField(verbose_name='Описание курса', max_length=200, blank=True)
     start_date = models.DateField(verbose_name='Старт курса')
     duration = models.PositiveIntegerField(verbose_name='Продолжительность курса')
-    price = models.PositiveSmallIntegerField(verbose_name='Цена курса', default=0, blank=True)
+    price = models.PositiveIntegerField(verbose_name='Цена курса', default=0, blank=True)
     count_lessons = models.PositiveIntegerField(verbose_name='Количество уроков')
 
     class Meta:
@@ -38,8 +38,3 @@ class Tracking(models.Model):
 
     class Meta:
         ordering = ['-id']
-
-
-
-
-# Create your models here.

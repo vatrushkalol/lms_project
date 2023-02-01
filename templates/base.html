@@ -6,6 +6,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Content {% block title%} онлайн курсы {% endblock %}</title>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="{% static 'styles.css' %}">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.3/jquery.min.js"></script>
+    <script defer src="{% static 'scripts.js' %}"></script>
 </head>
 <body>
     <header>
@@ -33,7 +36,7 @@
             {% else %}
                 <div class="nav-toggle"><span></span></div>
                 <div class="login"><a href="{% url 'login' %}" style="color: #000">Вход</a></div>
-                <div class="register"><a href="{% url 'logout' %}" style="color: #fff">Регистрация</a></div>
+                <div class="register"><a href="{% url 'register' %}" style="color: #fff">Регистрация</a></div>
             {% endif %}
         </div>
         </nav>
