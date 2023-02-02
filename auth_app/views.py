@@ -43,3 +43,5 @@ def change_password(request):
 
 def reset_password(request):
     return HttpResponse('<div><h1><b>Здесь находится страница восстановления пароля</b></h1></div>')
+
+
