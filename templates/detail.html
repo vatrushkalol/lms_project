@@ -15,8 +15,10 @@
         <div class="preview" style="margin-top: 1%; transform: none; box-shadow: none; border: none">
             <div style="font-weight: bold">Список уроков</div>
             {% for lesson in lessons %}
-                <p>{{ lesson.name }}</p>
+                <p style="font-weight:bold">{{forloop.counter}}. {{ lesson.name }}</p>
                 <p>{{ lesson.preview }}</p>
+            {% empty %}
+                <p>Уроки пока не добавлены.</p>
             {% endfor %}
             <form method="post" action="{% url 'enroll' course.pk %}">
                 {% csrf_token %}
