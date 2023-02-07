@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Content {% block title%} онлайн курсы {% endblock %}</title>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
-    <link rel="stylesheet" href="{% static 'styles.css' %}">
+    <link rel="stylesheet" href="{{ STATIC_URL }}/styles.css">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.3/jquery.min.js"></script>
     <script defer src="{% static 'scripts.js' %}"></script>
 </head>
@@ -14,7 +14,8 @@
     <header>
         <nav class="header_container">
             <div class="logo_container">
-                <a class="logo" href="{% url 'index' %}"><img src="{% static 'sova.png' %}" width="100"  height="111" alt="Лого" title="Лого"></a>
+                {% static 'sova.png' as logo_url %}
+                <a class="logo" href="{% url 'index' %}"><img src="{{ logo_url }}" width="100"  height="111" alt="Лого" title="Лого"></a>
                 <div class="describer">
                     <div class="title"><h2 translate="no">Content</h2></div>
                     <div class="role">Онлайн-курсы</div>
@@ -49,7 +50,7 @@
         <div class="foot_container"></div>
             <div class="logo">
                 <div class="copyright-mark">
-                    <p><img src="{% static 'sova.png' %}" width="100"  height="111" alt="Лого" title="Лого">
+                    <p><img src="{{ logo_url }}" width="100"  height="111" alt="Лого" title="Лого">
                     <span class="title">Content</span> - онлайн-курсы</p>
                 </div>
                 <div>&copy; {{ current_year }} Все права защищены</div>
