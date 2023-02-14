@@ -1,5 +1,7 @@
 from django.shortcuts import render, redirect
+from django.contrib.auth.decorators import login_required, permission_required
 from django.http import HttpResponse
+from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
 from django.views.generic import ListView, DeleteView, DetailView, CreateView, UpdateView
 from datetime import datetime
 from .forms import CourseForm
@@ -20,31 +22,27 @@ class MainView(ListView):
         return context
 
 
-# def index(request):
-#     courses = Course.objects.all()
-#     current_year = datetime.now().year
-#     return render(request, context={'courses': courses, 'current_year': current_year}, template_name='index.html')
-
-
-class CourseCreateView(CreateView):
+class CourseCreateView(LoginRequiredMixin, PermissionRequiredMixin, CreateView):
     model = Course
     form_class = CourseForm
     template_name = 'create.html'
+    permission_required = ('learning.add_course',)
 
     def get_success_url(self):
         return reverse('detail', kwargs={'course_id': self.object.id})
 
     def form_valid(self, form):
         course = form.save(commit=False)
-        course.author.save()
+        course.save()
         return super(CourseCreateView, self).form_valid(form)
 
 
-class CourseUpdateView(UpdateView):
+class CourseUpdateView(LoginRequiredMixin, PermissionRequiredMixin, UpdateView):
     model = Course
     form_class = CourseForm
     template_name = 'create.html'
     pk_url_kwarg = 'course_id'
+    permission_required = ('learning.change_course',)
 
     def get_queryset(self):
         return Course.objects.filter(id=self.kwargs.get('course_id'))
@@ -53,25 +51,11 @@ class CourseUpdateView(UpdateView):
         return reverse('detail', kwargs={'course_id': self.object.id})
 
 
-# def create(request):
-#     if request.method == 'POST':
-#         data = request.POST
-#         Course.objects.create(title=data['title'], author=request.user, description=data['description'],
-#                               start_date=data['start_date'], duration=data['duration'],
-#                               count_lessons=data['count_lessons'], price=data['price'])
-#         return redirect('index')
-#     else:
-#         return render(request, 'create.html')
-
-# def delete(request, course_id):
-#     Course.objects.get(id=course_id).delete()
-#     return redirect('index')
-
-
-class CourseDeleteView(DeleteView):
+class CourseDeleteView(LoginRequiredMixin, PermissionRequiredMixin, DeleteView):
     model = Course
     template_name = 'delete.html'
     pk_url_kwarg = 'course_id'
+    permission_required = ('learning.delete_course', )
 
     def get_queryset(self):
         return Course.objects.filter(id=self.kwargs.get('course_id'))
@@ -94,13 +78,9 @@ class CourseDetailView(DetailView):
         return context
 
 
-# def detail(request, course_id):
-#     course = Course.objects.get(id=course_id)
-#     lessons = Lesson.objects.get(id=course_id)
-#     context = {'course': course, 'lessons': lessons}
-#     return render(request, 'detail.html', context)
 
-
+@login_required
+@permission_required('learning.add_tracking', raise_exception=True)
 def enroll(request, course_id):
     if request.user.is_anonymous:
         return redirect('login')
