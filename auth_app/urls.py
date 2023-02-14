@@ -1,10 +1,19 @@
 from django.urls import path
+from django.contrib.auth.views import (LoginView, LogoutView, PasswordResetView, PasswordResetDoneView,
+                                       PasswordResetConfirmView, PasswordResetCompleteView, PasswordChangeView,
+                                       PasswordChangeDoneView)
 from .views import *
 
 urlpatterns = [
     path('login/', log_in, name='login'),
     path('register/', register, name='register'),
-    path('logout/', log_out, name='logout'),
-    path('change-password/', change_password, name='change_password'),
-    path('reset-password/', reset_password, name='reset_password')
+    path('logout/', LogoutView.as_view(next_page='index'), name='logout'),
+    # Смена пароля
+    path('password_change/', PasswordChangeView.as_view(), name='password_change'),
+    path('password_change/done', PasswordChangeDoneView.as_view(), name='password_change_done'),
+    # Сброс пароля
+    path('password-reset/', PasswordResetView.as_view(), name='password_reset'),
+    path('password-reset/done', PasswordResetDoneView.as_view(), name='password_reset_done'),
+    path('reset/<uuid64>/<token>', PasswordResetConfirmView.as_view(), name='password_reset_confirm'),
+    path('reset/done', PasswordResetConfirmView.as_view(), name='password_reset_complete'),
 ]
