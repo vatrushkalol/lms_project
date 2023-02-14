@@ -26,6 +26,8 @@ def register(request):
                     description=data['description'], birthday=data['birthday'], avatar=data['avatar'])
         user.set_password(data['password'])
         user.save()
+        pupil = Group.objects.set(name='Ученик')
+        user.groups.set(pupil)
         login(request, user)
         return redirect('index.html')
     else:
