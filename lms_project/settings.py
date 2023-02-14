@@ -139,7 +139,11 @@ STATICFILES_DIRS = [
     BASE_DIR / 'static/scripts'
 ]
 
+LOGIN_URL = 'login'
+LOGIN_REDIRECT_URL = 'index'
+LOGOUT_URL = 'logout'
 
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 SHORT_DATETIME_FORMAT = 'j.m.Y H:I'
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.1/ref/settings/#default-auto-field
