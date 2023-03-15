@@ -7,5 +7,6 @@ urlpatterns = [
     path('delete/<int:course_id>/', CourseDeleteView.as_view(), name='delete'),
     path('detail/<int:course_id>/', CourseDetailView.as_view(), name='detail'),
     path('enroll/<int:course_id>/', enroll, name='enroll'),
-    path('update/<int:course_id>/', CourseUpdateView.as_view(), name='update')
+    path('update/<int:course_id>/', CourseUpdateView.as_view(), name='update'),
+    path('review/<int:course_id>/', review, name='review')
 ]
