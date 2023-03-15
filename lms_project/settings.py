@@ -139,6 +139,9 @@ STATICFILES_DIRS = [
     BASE_DIR / 'static/scripts'
 ]
 
+MEDIA_URL = '/media/'
+MEDIA_ROOT = BASE_DIR / 'media'
+
 LOGIN_URL = 'login'
 LOGIN_REDIRECT_URL = 'index'
 LOGOUT_URL = 'logout'
