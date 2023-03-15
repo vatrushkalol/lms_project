@@ -29,7 +29,9 @@ DEBUG = True
 
 ALLOWED_HOSTS = []
 
-
+INTERNAL_IPS = [
+    '127.0.0.1'
+]
 # Application definition
 
 INSTALLED_APPS = [
@@ -42,6 +44,7 @@ INSTALLED_APPS = [
     # Custom apps
     'auth_app.apps.AuthAppConfig',
     'learning.apps.LearningConfig',
+    'debug_toolbar'
 
 ]
 
@@ -53,6 +56,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'debug_toolbar.middleware.DebugToolbarMiddleware',
 ]
 
 ROOT_URLCONF = 'lms_project.urls'
@@ -87,6 +91,7 @@ DATABASES = {
         'USER': os.environ.get('USER_DB'),
         'PASSWORD': os.environ.get('PASSWORD_DB'),
         'NAME': 'lms_project',
+        'ATOMIC_REQUEST': True,
     }
 }
 
