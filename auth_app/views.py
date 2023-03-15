@@ -1,6 +1,7 @@
 from django.shortcuts import render, redirect
-from django.http import HttpResponse, HttpRequest
+from django.http import HttpResponse
 from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth.models import Group
 from .models import User
 
 
@@ -26,7 +27,7 @@ def register(request):
                     description=data['description'], birthday=data['birthday'], avatar=data['avatar'])
         user.set_password(data['password'])
         user.save()
-        pupil = Group.objects.set(name='Ученик')
+        pupil = Group.objects.filter(name='Ученик')
         user.groups.set(pupil)
         login(request, user)
         return redirect('index.html')
