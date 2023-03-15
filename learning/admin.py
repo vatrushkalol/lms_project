@@ -4,12 +4,14 @@ from .models import Course, Lesson, Review
 # Register your models here.
 @admin.register(Course)
 class CourseAdmin(admin.ModelAdmin):
-    list_display = ('title', 'author', 'start_date', 'duration')
-    search_fields = ('title',)
-    list_per_page = 3
+    list_display = ('title', 'start_date', 'duration')
+    filter_horizontal = ('authors', )
+    search_fields = ('^title',)
+    list_per_page = 5
     actions_on_top = True
     actions_on_bottom = True
     actions_selection_counter = True
+    save_on_top = True
 
 @admin.register(Lesson)
 class LessonAdmin(admin.ModelAdmin):
