@@ -1,7 +1,7 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@200&display=swap');
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300&family=Roboto:wght@300&display=swap');
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300&family=Roboto:ital,wght@0,300;1,300&display=swap');
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300&family=Roboto+Slab:wght@300&family=Roboto:ital,wght@0,300;1,300&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Nunito:wght@300&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Mochiy+Pop+P+One&family=Sedgwick+Ave&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300&family=Inter:wght@200&family=Mouse+Memoirs&Display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Nunito:wght@200&display=swap');
 
 /* Сброс стилей по умолчанию */
 
@@ -9,12 +9,12 @@
     margin: 0;
     padding: 0;
     box-sizing: border-box;
-    transition: 15s ease-in-out;
+    transition: .15s ease-in-out;
 }
-.html {
-    font-size: calc(1em + 1vw)
+html {
+    font-size: calc(1em + 1vw);
 }
-.body {
+body {
     font-family: 'Inter', Arial, sans-serif;
 }
 
@@ -35,7 +35,7 @@ img {
 
 /* Styles hor header */
 
-.header_container, footer_container, main {
+.header_container, .footer_container, main {
     display: flex;
     flex-direction: row;
     justify-content: space-between;
@@ -70,7 +70,7 @@ img {
 }
 
 .role {
-    font-family: 'Roboto', Helvetica, Arial. sans-serif;
+    font-family: 'Roboto', Helvetica, Arial, sans-serif;
     font-style: italic;
     font-size: .55em;
     line-height: 1.2em;
@@ -123,10 +123,10 @@ img {
     position: absolute;
     width: 10%;
     color: #fa9405;
-    font-family: 'Roboto', Helvetica, sans-serif;
+    font-family: 'Mochiy Pop P One', Helvetica, sans-serif;
     margin-top: 10px;
     display: flex;
-    flex-direction; column;
+    flex-direction: column;
     padding: 10px;
     border: .5px solid rgba(134, 131, 131, 0.42);
     border-radius: 0 0 10px 10px;
@@ -140,7 +140,7 @@ img {
 
 .main {
     justify-content: flex-start;
-    margin: 2% - 4$ 0;
+    margin: 2% 0 4$ 0;
 }
 
 .main_container {
@@ -181,7 +181,7 @@ input, textarea {
     width: 92%;
     padding: 10px 5px 10px 32px;
     font-size: large;
-    font-family: 'Roboto', Helvetica, Arial, sans-serif;
+    font-family: 'Nunito', Helvetica, Arial, sans-serif;
     border: .5px solid #fa940559;
     box-sizing: content-box:
     border-radius: 3px;
@@ -214,7 +214,7 @@ input, textarea {
     background: #fa9405bf;
 }
 
-.course_container, .reviews_container {
+.courses_container .reviews_container {
     display: grid;
     width: 90%;
     margin: 5% 8%;
@@ -223,7 +223,7 @@ input, textarea {
     grid-gap: 30px;
 }
 
-.course_preview, .review {
+.course_preview .review {
         border: 1px solid rgba(0, 0, 0, 0.29)
         border-radius: 20px;
         font-size: .65em;
@@ -253,7 +253,7 @@ input, textarea {
     border-radius: 50%;
 }
 
-.course_container .course_preview:hover {
+.courses_container .course_preview:hover {
     transform: scale(1.01);
     transition: all .4s ease-in-out;
     border: 1.5px solid #fa9405;
@@ -267,7 +267,7 @@ input, textarea {
     font-weight: bold;
 }
 
-.footer {
+footer {
     position: fixed;
     left: 0;
     bottom: 0;
@@ -302,4 +302,8 @@ input, textarea {
 .review img {
     border-radius: 50%;
     width: 19%;
+}
+
+.error_field textarea {
+    background: #ffe8e8;
 }
