@@ -21,6 +21,7 @@
                     <div class="role">Онлайн-курсы</div>
                 </div>
             </div>
+                <div class="nav-toggle"><span></span></div>
 
         <div class="auth_container">
             {% if user.is_authenticated %}
@@ -28,7 +29,9 @@
                     <div><a href="#">{{user.first_name}} {{user.last_name}}</a></div>
                     <div class="submenu_profile" style="display: none;">
                         <div>
+                            <p><a class="fa fa-heart" href="{% url 'favourites' %}">Избранное</a></p>
                             <p><a href="{% url 'password_change' %}">Сменить пароль</a></p>
+                            <p><a href="{% url 'settings' %}">Настройки</a></p>
                             <p class="fa fa-sign-out"></p>
                             <a style="color: rgba(238, 68, 68, 0.83)" href="{% url 'logout' %}">Выxод</a>
                         </div>
