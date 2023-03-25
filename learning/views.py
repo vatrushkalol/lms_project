@@ -14,7 +14,7 @@ from django.db.models import Q
 
 # Create your views here.
 
-class MainView(ListView):
+class MainView(ListView, FormView):
     template_name = 'index.html'
     queryset = Course.objects.all()
     context_object_name = 'courses'
@@ -90,7 +90,7 @@ class CourseDeleteView(LoginRequiredMixin, PermissionRequiredMixin, DeleteView):
         return reverse('index')
 
 
-class CourseDetailView(DetailView):
+class CourseDetailView(ListView):
     template_name = 'detail.html'
     context_object_name = 'lessons'
     pk_url_kwarg = 'course_id'
@@ -101,7 +101,7 @@ class CourseDetailView(DetailView):
         count = views.get(course_id, 0)
         views[course_id] = count + 1
         request.session['views'] = views
-        return super().get(CourseDetailView, self).get(request, *args, **kwargs)
+        return super(CourseDetailView, self).get(request, *args, **kwargs)
 
     def get_queryset(self):
         return Lesson.objects.select_related('course').filter(course=self.kwargs.get('course_id'))
