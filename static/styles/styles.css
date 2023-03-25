@@ -30,7 +30,7 @@ a:hover {
     transition: .55s ease-in-out;
 }
 img {
-    mas-width: 40%
+    max-width: 40%
 }
 
 /* Styles hor header */
@@ -40,7 +40,7 @@ img {
     flex-direction: row;
     justify-content: space-between;
     align-items: center;
-    margin: 1% 0%;
+    margin: 1% 0;
     height: 25%
 }
 
@@ -140,7 +140,7 @@ img {
 
 .main {
     justify-content: flex-start;
-    margin: 2% 0 4$ 0;
+    margin: 2% 0 4% 0;
 }
 
 .main_container {
@@ -169,7 +169,7 @@ img {
     text-align: center;
     font-size: 2em;
     color: #fa9405;
-    margin-bottom: 2$;
+    margin-bottom: 2%;
 }
 
 input, textarea {
@@ -183,15 +183,15 @@ input, textarea {
     font-size: large;
     font-family: 'Nunito', Helvetica, Arial, sans-serif;
     border: .5px solid #fa940559;
-    box-sizing: content-box:
+    box-sizing: content-box;
     border-radius: 3px;
 }
 
 #form input:active, #form input:focus,
-#form textarea:active, #form textarea:focus;
+#form textarea:active, #form textarea:focus
 {
     border: 1px solid #fa9405;
-    background: rgba(238, 236, 240, 0.2)
+    background: rgba(238, 236, 240, 0.2);
     box-shadow: 0 1px 4px 0 #fa940559 inset;
 }
 
@@ -206,7 +206,7 @@ input, textarea {
     font-size: .9em;
     text-shadow: 0 1px 1px rgba(0, 0, 0, 0.5);
     border-radius: 3px;
-    box-shadow; 0 1px 6px 4px $fa940559 inset;
+    box-shadow: 0 1px 6px 4px #fa940559 inset;
     transition: all .2s ease-in-out;
 }
 
@@ -236,7 +236,7 @@ input, textarea {
 }
 
 .course_preview .review {
-        border: 1px solid rgba(0, 0, 0, 0.29)
+        border: 1px solid rgba(0, 0, 0, 0.29);
         border-radius: 20px;
         font-size: .65em;
         line-height: 1.5em;
@@ -245,7 +245,7 @@ input, textarea {
 }
 
 .course_preview:nth-child(2) {
-    margin: 0% 2.5%;
+    margin: 0 2.5%;
     padding-left: 0;
 }
 
@@ -308,7 +308,7 @@ footer {
 .review p:nth-child(3) {
     opacity: 0.9;
     font-size: .8em;
-    paddingL 3% 1%;
+    padding: 3% 1%;
 }
 
 .review img {
