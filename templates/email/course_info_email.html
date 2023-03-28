@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Content {% block title%} онлайн курсы {% endblock %}</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="{{ STATIC_URL }}styles.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.3/jquery.min.js"></script>
+    <script defer src="{% static 'scripts.js' %}"></script>
+</head>
+<body>
+    <main>
+        {% block content %}
+        <p>{{ message }}</p><br>
+            <div class="course_container">
+                {% with course_var=lessons.first.course %}
+                <div class="course_preview" style="transform: none; box-shadow: none; border: none">
+                    <p><a href="{{ request.scheme }}://{{ request.META.HTTP_HOST }}{{ course.get_absolute_url }}">{{ course_var.title }}</a></p>
+
+                    {% with authors=course_var.authors.all %}
+                        {% if authors|length == 1 %}
+                        <p>Автор: {{ authors.0.last_name }} {{ authors.0.first_name  }}</p>
+                        {% else %}
+                            <p>
+                                Авторы:
+                                {% for author in authors %}
+                                    {{ author.last_name }} {{ author.first_name  }}
+                                {% endfor %}
+                            </p>
+                        {% endif %}
+                    {% endwith %}
+
+                    <p>Старт: {{ course_var.start_date }}</p>
+                    <p>Продолжительность: {{ course_var.duration }} месяцев/-a</p>
+                    <p>Количество уроков: {{ course_var.count_lesson }}</p>
+                    <p>{{ course_var.description }}</p>
+                    <p><span class="price">{{ course_var.price }}</span></p>
+                </div>
+        {% endblock %}
+    </main>
+</body>
+</html>
