@@ -2,11 +2,12 @@ from django.urls import path
 from django.contrib.auth.views import (LoginView, LogoutView, PasswordResetView, PasswordResetDoneView,
                                        PasswordResetConfirmView, PasswordResetCompleteView, PasswordChangeView,
                                        PasswordChangeDoneView)
+from django.views.decorators.cache import cache_control
 from .views import *
 
 urlpatterns = [
-    path('login/', UserLoginView.as_view(), name='login'),
-    path('register/', RegisterView.as_view(), name='register'),
+    path('login/', cache_control(private=True)(UserLoginView.as_view()), name='login'),
+    path('register/', cache_control(private=True)(RegisterView.as_view()), name='register'),
     path('logout/', LogoutView.as_view(next_page='index'), name='logout'),
     # Смена пароля
     path('password_change/', PasswordChangeView.as_view(), name='password_change'),
