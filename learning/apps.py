@@ -6,3 +6,5 @@ class LearningConfig(AppConfig):
     name = 'learning'
     verbose_name = 'Управление обучением'
 
+    def ready(self):
+        from .signals import check_quantity
