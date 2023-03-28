@@ -1,6 +1,8 @@
 from django.shortcuts import render, redirect
+from django.core.cache import cache, caches
 from django.contrib.auth.decorators import login_required, permission_required
 from django.http import HttpResponse, HttpResponseRedirect
+from django.core.cache.backends.redis import RedisCache
 from django.db import transaction
 from django.core.exceptions import NON_FIELD_ERRORS
 from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
@@ -9,7 +11,9 @@ from datetime import datetime
 from .forms import CourseForm, ReviewForm, LessonForm, OrderByAndSearchForm, SettingsForm
 from django.urls import reverse
 from .models import Course, Lesson, Tracking, Review
+from django.db.models.signals import pre_save
 from django.db.models import Q
+from .signals import set_views, course_enroll, get_certificate
 
 
 # Create your views here.
@@ -28,9 +32,13 @@ class MainView(ListView, FormView):
     def get_paginate_by(self, queryset):
         return self.request.COOKIES.get('paginate_by', 5)
 
-
     def get_queryset(self):
-        queryset = MainView.queryset
+        if 'courses' in cache:
+            queryset = cache.get('courses')
+        else:
+            queryset = MainView.queryset
+            cache.set('courses', queryset, timeout=30)
+
         if {'search': 'price_order'} != self.request.GET.keys():
             return queryset
         else:
@@ -46,6 +54,7 @@ class MainView(ListView, FormView):
         initial['price_order'] = self.request.GET.get('price_order', 'title')
         return initial
 
+
 class CourseCreateView(LoginRequiredMixin, PermissionRequiredMixin, CreateView):
     model = Course
     form_class = CourseForm
@@ -53,14 +62,15 @@ class CourseCreateView(LoginRequiredMixin, PermissionRequiredMixin, CreateView):
     permission_required = ('learning.add_course',)
 
     def get_success_url(self):
-        return reverse('detail', kwargs={'course_id': self.object.id})
+        return
 
     def form_valid(self, form):
         with transaction.atomic():
             course = form.save(commit=False)
             course.author = self.request.user
             course.save()
-            return super(CourseCreateView, self).form_valid(form)
+            cache.delete('courses')
+            return redirect(reverse('detail', kwargs={'course_id': course.id}))
 
 
 class CourseUpdateView(LoginRequiredMixin, PermissionRequiredMixin, UpdateView):
@@ -83,6 +93,11 @@ class CourseDeleteView(LoginRequiredMixin, PermissionRequiredMixin, DeleteView):
     pk_url_kwarg = 'course_id'
     permission_required = ('learning.delete_course',)
 
+    def form_valid(self, form):
+        course_id = self.kwargs.get('course_id')
+        cache.delete_many(['courses', f"course_{course_id}_lessons"])
+        return super(CourseDeleteView, self).form_valid(form)
+
     def get_queryset(self):
         return Course.objects.filter(id=self.kwargs.get('course_id'))
 
@@ -96,15 +111,18 @@ class CourseDetailView(ListView):
     pk_url_kwarg = 'course_id'
 
     def get(self, request, *args, **kwargs):
-        views = request.session.setdefault('views', {})
-        course_id = str(kwargs[CourseDetailView.pk_url_kwarg])
-        count = views.get(course_id, 0)
-        views[course_id] = count + 1
-        request.session['views'] = views
+        set_views.send(sender=self.__class__,
+                       session=request.session,
+                       pk_url_kwarg=CourseDetailView.pk_url_kwarg,
+                       id=kwargs[CourseDetailView.pk_url_kwarg])
         return super(CourseDetailView, self).get(request, *args, **kwargs)
 
     def get_queryset(self):
-        return Lesson.objects.select_related('course').filter(course=self.kwargs.get('course_id'))
+        course_id = self.kwargs.get('course_id')
+        queryset = cache.get_or_set(f'course_{course_id}_lessons',
+                                    Lesson.objects.select_related('course').filter(course='course_id'),
+                                    timeout=30)
+        return queryset
 
     def get_context_data(self, **kwargs):
         context = super(CourseDetailView, self).get_context_data(**kwargs)
@@ -119,6 +137,14 @@ class LessonCreateView(CreateView, LoginRequiredMixin, PermissionRequiredMixin):
     pk_url_kwarg = 'course_id'
 
     permission_required = ('learning.add_lesson',)
+
+    def form_valid(self, form):
+        error = pre_save.send(sender=LessonCreateView.model, instance=form.save(commit=False))
+        if error[0][1]:
+            form.errors[NON_FIELD_ERRORS] = [error[0][1]]
+            return super(LessonCreateView, self).form_invalid(form)
+        else:
+            return super(LessonCreateView, self).form_valid(form)
 
     def get_success_url(self):
         return reverse('detail', kwargs={'course_id': self.kwargs.get('course_id')})
@@ -142,6 +168,10 @@ def enroll(request, course_id):
             lessons = Lesson.objects.filter(course=course_id)
             records = [Tracking(lesson=lesson, user=request.user, passed=False) for lesson in lessons]
             Tracking.objects.bulk_create(records)
+
+            # Email send
+            course_enroll.send(sender=Tracking, request=request, course_id=course_id)
+
             return HttpResponse('Вы записаны на данный курс')
 
 
@@ -172,6 +202,7 @@ def add_booking(request, course_id):
 
     return redirect(reverse('index'))
 
+
 def remove_booking(request, course_id):
     if request.method == 'POST':
         request.session.get('favourites').remove(course_id)
@@ -179,12 +210,14 @@ def remove_booking(request, course_id):
 
     return redirect(reverse('index'))
 
+
 class FavouriteView(MainView):
 
     def get_queryset(self):
         queryset = super(FavouriteView, self).get_queryset()
         ids = self.request.session.get('favourites', list())
         return queryset.filter(id__in=ids)
+
 
 class SettingFormView(FormView):
     form_class = SettingsForm
@@ -200,3 +233,8 @@ class SettingFormView(FormView):
         initial = super(SettingFormView, self).get_initial()
         initial['paginate_by'] = self.request.COOKIES.get('paginate_by', 5)
         return initial
+
+
+def get_certificate_view(request):
+    get_certificate.send(sender=request.user)
+    return HttpResponse('Сертификат отправлен на Ващ email')
