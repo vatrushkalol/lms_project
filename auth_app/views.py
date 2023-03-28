@@ -8,6 +8,7 @@ from datetime import datetime
 from .models import User
 from django.views.generic.edit import CreateView
 from .forms import LoginForm, RegisterForm
+from .signals import account_access
 
 
 class UserLoginView(LoginView):
@@ -22,6 +23,10 @@ class UserLoginView(LoginView):
             self.request.session.set_expiry(settings.REMEMBER_AGE)
         elif is_remeber == 'off':
             self.request.session.set_expiry(0)
+
+        # Send email about autorization
+        account_access.send(sender=self.__class__, request=self.request)
+
         return super(UserLoginView, self).form_valid(form)
 
 class RegisterView(CreateView):
@@ -30,8 +35,6 @@ class RegisterView(CreateView):
 
     def form_valid(self, form):
         user = form.save()
-        pupil = Group.objects.filter(name='Ученик')
-        user.groups.set(pupil)
         login(self.request, user)
         return redirect('index')
 
@@ -40,13 +43,4 @@ class RegisterView(CreateView):
 def log_out(request):
     logout(request)
     return redirect('login')
-
-
-def change_password(request):
-    return HttpResponse('<div><h1><b>Здесь находится страница смены пароля пользователя</b></h1></div>')
-
-
-def reset_password(request):
-    return HttpResponse('<div><h1><b>Здесь находится страница восстановления пароля</b></h1></div>')
-
 
