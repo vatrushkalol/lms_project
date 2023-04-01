@@ -44,7 +44,7 @@ class MainView(ListView, FormView):
         else:
             search_query = self.request.GET.get('search')
             price_order_by = self.request.GET.get('price_order')
-            filter = Q(title__icontains=search_query) | Q(description_i_icontains=search_query)
+            filter = Q(title_i_contains=search_query) | Q(description_i_icontains=search_query)
             queryset = queryset.filter(filter).order_by(price_order_by)
         return queryset
 
@@ -60,9 +60,6 @@ class CourseCreateView(LoginRequiredMixin, PermissionRequiredMixin, CreateView):
     form_class = CourseForm
     template_name = 'create.html'
     permission_required = ('learning.add_course',)
-
-    def get_success_url(self):
-        return
 
     def form_valid(self, form):
         with transaction.atomic():
