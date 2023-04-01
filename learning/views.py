@@ -218,6 +218,7 @@ class FavouriteView(MainView):
 
 class SettingFormView(FormView):
     form_class = SettingsForm
+    template_name = 'settings.html'
 
     def post(self, request, *args, **kwargs):
         paginate_by = request.POST.get('paginate_by')
