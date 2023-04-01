@@ -6,6 +6,6 @@
 </head>
 <body>
   {{ message|linebreaksbr }}
-  <a href="{{ request.scheme }}://{{ request.META,HTTP_HOST }}{% url 'password_reset' %}">сменить пароль</a>
+  <a href="{{ request.scheme }}://{{ request.META.HTTP_HOST }}{% url 'password_reset' %}">сменить пароль</a>
 </body>
 </html>
